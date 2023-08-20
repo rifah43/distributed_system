@@ -1,0 +1,11 @@
+<div class="back">
+  <button><a routerLink="">Back to Home</a></button>
+</div>
+<div class="container" *ngIf="post">
+  <div class="post-card">
+    <h1>Post</h1>
+    <hr>
+    <h4>{{ post.name }}</h4>
+    <p>{{ post.content }}</p>
+  </div>
+</div>

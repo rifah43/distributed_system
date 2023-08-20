@@ -1,0 +1,18 @@
+<div><app-navbar></app-navbar><br><br><br><br><br></div>
+<h1  *ngIf="!authenticated">Welcome to Demo LinkedIn</h1><br>
+<div class="imgcn" *ngIf="!authenticated">
+  <img src="../../assets/images/vector-illustration-virtual-business-assistant-260nw-1328365757.jpg" >
+</div>
+
+<div class="container" *ngIf="authenticated">
+  <h1 class="header">{{ message }}</h1>
+  <div class="post-container" *ngIf="posts.length > 0">
+    <div *ngFor="let post of posts" class="post-card">
+      <hr class="post-divider" />
+      <h4><b>Username: {{ post.username }}</b></h4>
+      <p>{{ post.content }}</p>
+      <img *ngIf="post.imageUrl" [src]="post.imageUrl" alt="Post Image" class="post-image" />
+      <hr class="post-divider" />
+    </div>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+<div>
+  <div class="back">
+    <button><a routerLink="">Back to Home</a></button>
+  </div>
+  <div *ngFor="let notification of notifications">
+    <div class="notification">
+      <a [routerLink]="['/individualPost', notification.postId]"><p>{{ notification.message }}</p></a>
+      <button (click)="deleteNotification(notification._id)">Delete</button>   
+    </div>
+</div>
+</div>
+  

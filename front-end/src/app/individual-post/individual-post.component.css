@@ -1,0 +1,52 @@
+/* post-detail.component.css */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  
+  .post-card {
+    background-color: #0a900352;
+    border: 1px solid #007724;
+    padding: 20px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 30px 30px 30px rgba(0, 0, 0, 0.168);
+  }
+  
+  h1 {
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  h4 {
+    margin: 0;
+    color: #666;
+  }
+  
+  p {
+    margin-top: 10px;
+    color: #444;
+  }
+
+  hr{
+    border-style:dashed;
+    border-color: #000000;
+    border-width: 2px;
+  }
+
+  .back button{
+    background-color: #ffa053;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .back button:hover{
+    background-color: #ffd3ae;
+    color: #000000;
+    border: none;
+    padding: 5px 10px;
+  }
