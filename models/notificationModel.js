@@ -35,7 +35,7 @@ module.exports.getNotification = async (req, res) => {
       
       const userId = user._id;
   
-      const notifications = await Notification.find({ userId }).sort({ createdAt: -1 }).exec();
+      const notifications = await Notification.find({ userId:{ $ne: userId } }).sort({ createdAt: -1 }).exec();
       res.status(200).json(notifications);
     } catch (error) {
       console.error('Error retrieving notifications:', error);
