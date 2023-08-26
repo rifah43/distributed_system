@@ -21,14 +21,14 @@ export class PostComponent implements OnInit {
     this.jwtToken = localStorage.getItem('token')
 
     if(this.jwtToken){
-    this.form = this.formbuilder.group({
-      content: [''],
-      image: [''],
-    });
-  }
-  else{
-    this.router.navigate(['/login']); 
-  }
+      this.form = this.formbuilder.group({
+        content: [''],
+        image: [''],
+      });
+    }
+    else{
+      this.router.navigate(['/login']); 
+    }
   }
 
   onFileSelected(event: any) {
@@ -44,57 +44,34 @@ export class PostComponent implements OnInit {
     const content = this.form.get('content')?.value;
     const image = this.selectedFile;
 
-    if (!content && !image) {
-      swal.fire('Error!', 'Please provide either post content or an image.', 'error');
-      return;
+    const formData = new FormData();
+    formData.append('content', content);
+    if (image) {
+      formData.append('image', image, image.name);
     }
-
-    const post = this.form.getRawValue();
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.jwtToken}`
     });
 
-    if (image) {
-      post.image = this.selectedFile;
-
-      this.http.post<any>('http://localhost:9000/user/post', post, {
-        headers: headers
-      }).subscribe(
-        (response) => {
-          console.log(response);
-          this.form.reset();
-          swal.fire({
-            title: 'Success!',
-            text: response.message,
-            icon: 'success',
-            timer: 1500,
-            showConfirmButton: false
-          });
-          this.selectedFile = null;
-          this.router.navigate(['/']); 
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-    } else {
-      console.log(headers);
-      this.http.post('http://localhost:9000/user/post', post, {
-        headers: headers
-      }).subscribe(
-        (response: any) => {
-          swal.fire({
-            title: 'Success!',
-            text: response.message,
-            icon: 'success',
-            timer: 1500,
-            showConfirmButton: false
-          });
-          this.form.reset();
-          this.router.navigate(['/']); 
-        }
-      );
-    }
+    this.http.post<any>('http://localhost:9200/user/post', formData, {
+      headers: headers
+    }).subscribe(
+      (response) => {
+        this.form.reset();
+        swal.fire({
+          title: 'Success!',
+          text: response.message,
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false
+        });
+        this.selectedFile = null;
+        this.router.navigate(['/']); 
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
   }
 }

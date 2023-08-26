@@ -59,3 +59,10 @@ h1{
   color: black;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
+.navbar-container {
+  margin-bottom: 50px; /* Add spacing between navbar and content */
+}
+
+.content-container {
+  margin-top: 80px; /* Add spacing between top content and navbar */
+}

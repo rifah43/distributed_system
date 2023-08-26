@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const Notification = require('./notificationModel');
 const User = require('./userModel');
+const minIOIntegration = require('../minIOSetup/minIOConnection');
+const minioClient = minIOIntegration.minioClient;
+const fs = require('fs');
 
 const postSchema = new mongoose.Schema({
   name: {
@@ -37,11 +40,26 @@ module.exports.getPost = async (req, res) => {
 };
 
 module.exports.createPost = async (req, res) => {
+  const bucketName = 'linkedin';
+  const file = req.file;
+
   try {
+    let imageUrl = null;
+
+    if (file) {
+      const fileData = fs.readFileSync(file.path);
+      const objectName = Date.now() + '-' + file.originalname;
+      const metadata = { 'Content-type': 'image' };
+      const v= await minioClient.putObject(bucketName, objectName, fileData, metadata);
+
+      imageUrl = `http://localhost:9000/${bucketName}/${objectName}`; 
+      console.log(objectName)
+    }
+
     const newPost = new Post({
       name: req.firstname,
       content: req.body.content,
-      imageUrl: req.body.imageUrl,
+      imageUrl: imageUrl,
     });
     const result = await newPost.save();
 

@@ -32,13 +32,15 @@ export class DashboardComponent implements OnInit {
 
   fetchPosts(): void {
     const headers= new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
-    this.http.get<any>('http://localhost:9000/user/post', { headers: headers }).subscribe(
+    this.http.get<any>('http://localhost:9200/user/post', { headers: headers }).subscribe(
       (posts) => {
         this.posts = posts;
+        console.log(this.posts)
       },
       (error) => {
         console.error('Error fetching posts:', error);
       }
     );
+    
   }
 }

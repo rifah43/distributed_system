@@ -10,10 +10,10 @@ export class NotificationService {
   constructor(private http: HttpClient) {}
 
   getNotifications(headers: HttpHeaders): Observable<any[]> {
-    return this.http.get<any[]>('http://localhost:9000/user/notification', { headers });
+    return this.http.get<any[]>('http://localhost:9200/user/notification', { headers });
   }
 
   deleteNotification(notificationId: string, headers: HttpHeaders): Observable<any> {
-    return this.http.delete<any>(`http://localhost:9000/user/notification/${notificationId}`, { headers });
+    return this.http.delete<any>(`http://localhost:9200/user/notification/${notificationId}`, { headers });
   }
 }

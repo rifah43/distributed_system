@@ -11,6 +11,12 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   display: block;
 }
 
+.imgcn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 ol, ul {
   list-style: none;
   margin: 0px;

@@ -11,12 +11,19 @@ import swal from 'sweetalert2';
 })
 export class RegisterComponent implements OnInit{
   form:FormGroup
+  authenticated = false;
+  token: string | null = null;
 
   constructor(private formbuilder:FormBuilder, private http:HttpClient, private router:Router){
 
   }
 
   ngOnInit(): void {
+    this.token = localStorage.getItem('token');
+
+    if (this.token) {
+      this.authenticated = true;
+    }
     this.form = this.formbuilder.group({
       firstname: ['', Validators.required],
       lastname: ['', Validators.required],
@@ -39,7 +46,7 @@ export class RegisterComponent implements OnInit{
       return;
     }
 
-    this.http.post("http://localhost:9000/user/register", user, {
+    this.http.post("http://localhost:9200/user/register", user, {
       withCredentials: true
     })
     .subscribe(

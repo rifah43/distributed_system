@@ -9,7 +9,7 @@ var multer = require("multer");
 var minio = require("minio");
 
 const url= "mongodb://127.0.0.1:27017/linkedin";
-const port= 9000;
+const port= 9200;
 const app= express();
 
 mongoose.connect(url, {
