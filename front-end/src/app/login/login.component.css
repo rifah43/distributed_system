@@ -6,11 +6,12 @@
   font-size: 100%;
   font: inherit;
   vertical-align: baseline;
+  color: black;
 }
 
 /* Main Styles */
 body {
-  background: #76b852;
+  background: #a0c869;
   font-family: 'Roboto', sans-serif;
 }
 
@@ -48,8 +49,8 @@ input[type="text"], input[type="email"], input[type="password"] {
   border: none;
   padding: 0.8em;
   border: solid 1px rgba(255, 255, 255, 0.37);
-  background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 96%, #fff 4%);
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 96%, #fff 4%);
+  background: -webkit-linear-gradient(top, rgba(57, 210, 88, 0.056) 96%, #fff 4%);
+  background: linear-gradient(to bottom, rgba(69, 209, 118, 0.112) 96%, #fff 4%);
   background-position: -800px 0;
   background-size: 100%;
   background-repeat: no-repeat;
@@ -64,9 +65,9 @@ input.email, input.text.w3lpass {
 input[type="submit"] {
   font-size: .9em;
   color: #fff;
-  background: #76b852;
+  background: #a0c869;
   outline: none;
-  border: 1px solid #76b852;
+  border: 1px solid #a0c869;
   cursor: pointer;
   padding: 0.9em;
   width: 100%;
@@ -75,7 +76,8 @@ input[type="submit"] {
 }
 
 input[type="submit"]:hover {
-  background: #8DC26F;
+  background: #2e8135;
+  color: wheat;
 }
 
 .colorlibcopy-agile {
