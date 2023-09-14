@@ -4,8 +4,8 @@ const minioClient = new Minio.Client({
     endPoint: 'localhost', 
     port: 9000,                            
     useSSL: false,                         
-    accessKey: 'GBzPdnxBiXR1kDqmEbJ1',     
-    secretKey: 'lMScjzApgvN8So2z4YfpyimNFyAmFQtjBuTkKYBx', 
+    accessKey: 'vbZYp0B2DMsmyPGclqDO',     
+    secretKey: 'IHsSMRuCkig2UKNTRm32TISbKkFYgjajkY4jiW05', 
     region: 'ap-south-1'         
   });
 
