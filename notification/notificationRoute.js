@@ -1,6 +1,6 @@
 const {Router}= require('express');
-const mongoose= require('mongoose');
-const otherDbConnection = mongoose.createConnection('mongodb://localhost/linkedin-user');
+// const mongoose= require('mongoose');
+// const otherDbConnection = mongoose.createConnection('mongodb://localhost/linkedin-user');
 const router= Router();
 const authMiddleware= require('./authMiddleware.js');
 const Notification= require('./notificationModel.js');
