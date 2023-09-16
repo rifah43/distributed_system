@@ -53,8 +53,8 @@ export class PostComponent implements OnInit {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.jwtToken}`
     });
-
-    this.http.post<any>('http://localhost:9200/user/post', formData, {
+    console.log(headers);
+    this.http.post<any>('http://localhost:9201/user/post', formData, {
       headers: headers
     }).subscribe(
       (response) => {

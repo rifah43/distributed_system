@@ -3,10 +3,7 @@ const express= require("express");
 const cors= require("cors");
 const cookieParser= require("cookie-parser");
 const bodyParser = require("body-parser");
-const routes = require("./routes/router");
-const cleanNotificationJob= require('./jobs/cleanNotificationJob');
-var multer = require("multer");
-var minio = require("minio");
+const cleanNotificationJob= require('./notification/cleanNotificationJob.js');
 
 const url= "mongodb://127.0.0.1:27017/linkedin";
 const port= 9200;
@@ -36,5 +33,12 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.json({limit: "4mb"}));
-app.use(routes);
 
+const userRoutes = require('./user/userRoutes.js');
+app.use(userRoutes);
+
+const postRoutes = require('./post/postRoutes.js');
+app.use(postRoutes);
+
+const notifRoutes = require('./notification/notificationRoute.js');
+app.use(notifRoutes);
