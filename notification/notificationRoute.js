@@ -1,14 +1,14 @@
 const {Router}= require('express');
-// const mongoose= require('mongoose');
-// const otherDbConnection = mongoose.createConnection('mongodb://localhost/linkedin-user');
+const mongoose= require('mongoose');
 const router= Router();
 const authMiddleware= require('./authMiddleware.js');
 const Notification= require('./notificationModel.js');
 const User= require('../user/userModel.js');
+const linkedInUserConnection = mongoose.createConnection('mongodb://mongodb-service1:27017/linkedin-user');
 
 router.get("/user/notification",authMiddleware.authenticate, async (req, res) => {
   try {
-    const us= User.User;
+    const us= linkedInUserConnection.model('User');
     const user = await us.findOne({ email: req.email });
     if (!user) {
       throw new Error('User not found.');

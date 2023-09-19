@@ -4,6 +4,8 @@ const User = require('../user/userModel');
 const minIOIntegration = require('./minIOSetup/minIOConnection.js');
 const minioClient = minIOIntegration.minioClient;
 const fs = require('fs');
+const linkedInUserConnection = mongoose.createConnection('mongodb://mongodb-service1:27017/linkedin-user');
+const linkedInNotificationConnection = mongoose.createConnection('mongodb://mongodb-service3:27017/linkedin-notification');
 
 const postSchema = new mongoose.Schema({
   name: {
@@ -40,6 +42,7 @@ module.exports.getPost= async (req, res) => {
 };
 
 module.exports.makePost= async (req, res) =>{
+  console.log(linkedInUserConnection);
   const bucketName = 'linkedin';
   const file = req.file;
   try {
@@ -51,7 +54,7 @@ module.exports.makePost= async (req, res) =>{
       const metadata = { 'Content-type': 'image' };
       const v= await minioClient.putObject(bucketName, objectName, fileData, metadata);
 
-      imageUrl = `http://localhost:9000/${bucketName}/${objectName}`; 
+      imageUrl = `http://minio:9000/${bucketName}/${objectName}`;
     }
 
     const newPost = new Post({
@@ -60,7 +63,7 @@ module.exports.makePost= async (req, res) =>{
       imageUrl: imageUrl,
     });
     const result = await newPost.save();
-    const us= User.User;
+    const us= linkedInUserConnection.model('User');
     const otherUsers = await us.find({ _id: { $nin: req._id } });
     const message = `${req.firstname} has created a new post.`;
 
@@ -69,7 +72,7 @@ module.exports.makePost= async (req, res) =>{
       postId: result._id,
       message,
     }));
-    const no= Notification.Notification;
+    const no= linkedInNotificationConnection.model('Notification');
 
     await no.insertMany(notifications);
 
