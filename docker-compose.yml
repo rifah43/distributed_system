@@ -3,6 +3,8 @@ services:
   service1:
     build:
       context: ./user
+    ports:
+      - '3001:3000'
     networks:
       - my-network
 
@@ -12,6 +14,8 @@ services:
       - service3
     build:
       context: ./post
+    ports:
+      - '3002:3000'
     networks:
       - my-network
 
@@ -20,6 +24,8 @@ services:
       - service1
     build:
       context: ./notification
+    ports:
+      - '3003:3000'
     networks:
       - my-network
 
