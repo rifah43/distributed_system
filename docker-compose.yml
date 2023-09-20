@@ -1,0 +1,66 @@
+version: '3'
+services:
+  service1:
+    build:
+      context: ./user
+    networks:
+      - my-network
+
+  service2:
+    depends_on:
+      - service1
+      - service3
+    build:
+      context: ./post
+    networks:
+      - my-network
+
+  service3:
+    depends_on:
+      - service1
+    build:
+      context: ./notification
+    networks:
+      - my-network
+
+  mongodb-service1:
+    image: mongo
+    container_name: mongodb-user
+    networks:
+      - my-network
+
+  mongodb-service2:
+    image: mongo
+    container_name: mongodb-post
+    networks:
+      - my-network
+
+  mongodb-service3:
+    image: mongo
+    container_name: mongodb-notification
+    networks:
+      - my-network
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    environment:
+      MINIO_ACCESS_KEY: vbZYp0B2DMsmyPGclqDO
+      MINIO_SECRET_KEY: IHsSMRuCkig2UKNTRm32TISbKkFYgjajkY4jiW05
+    networks:
+      - my-network
+    volumes:
+      - ./post/uploads:/data  
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    volumes:
+      - ./nginx.conf:/nginx.conf
+    ports:
+      - '80:80'
+    networks:
+      - my-network
+
+networks:
+  my-network:

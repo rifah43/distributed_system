@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const Notification = require('../notification/notificationModel.js');
-const User = require('../user/userModel');
 const minIOIntegration = require('./minIOSetup/minIOConnection.js');
 const minioClient = minIOIntegration.minioClient;
 const fs = require('fs');

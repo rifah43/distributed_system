@@ -1,12 +1,11 @@
 const mongoose= require("mongoose");
 const express= require("express");
 const cors= require("cors");
-const cookieParser= require("cookie-parser");
 const bodyParser = require("body-parser");
 const cleanNotificationJob= require('./cleanNotificationJob.js');
 
 const url= "mongodb://127.0.0.1:27017/linkedin-notification";
-const port= 9200;
+const port= 3000;
 const app= express();
 
 mongoose.connect(url, {
@@ -30,7 +29,6 @@ app.use(cors({
   origin: 'http://localhost:4200',
   credentials: true
 }));
-app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.json({limit: "4mb"}));
 

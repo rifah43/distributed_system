@@ -1,7 +1,6 @@
 FROM node:18
 
-WORKDIR /app 
-#eta dekhbo
+WORKDIR . /app 
 
 COPY package*.json ./
 
@@ -11,4 +10,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["node", "server.js"]
