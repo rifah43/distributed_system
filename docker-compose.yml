@@ -41,16 +41,16 @@ services:
     networks:
       - my-network
 
-  minio:
-    image: minio/minio
-    container_name: minio
-    environment:
-      MINIO_ACCESS_KEY: vbZYp0B2DMsmyPGclqDO
-      MINIO_SECRET_KEY: IHsSMRuCkig2UKNTRm32TISbKkFYgjajkY4jiW05
-    networks:
-      - my-network
-    volumes:
-      - ./post/uploads:/data  
+  # minio:
+  #   image: minio/minio
+  #   container_name: minio
+  #   environment:
+  #     MINIO_ACCESS_KEY: vbZYp0B2DMsmyPGclqDO
+  #     MINIO_SECRET_KEY: IHsSMRuCkig2UKNTRm32TISbKkFYgjajkY4jiW05
+  #   networks:
+  #     - my-network
+  #   volumes:
+  #     - ./post/uploads:/data  
 
   nginx:
     image: nginx

@@ -3,8 +3,8 @@ const express= require("express");
 const cors= require("cors");
 const bodyParser = require("body-parser");
 
-const url= "mongodb://127.0.0.1:27017/linkedin-user";
-const port= 3000;
+const url= "mongodb://mongodb-service1:27017/linkedin-user";
+const port= 3001;
 const app= express();
 
 mongoose.connect(url, {

@@ -4,8 +4,8 @@ const cors= require("cors");
 const bodyParser = require("body-parser");
 const cleanNotificationJob= require('./cleanNotificationJob.js');
 
-const url= "mongodb://127.0.0.1:27017/linkedin-notification";
-const port= 3000;
+const url= "mongodb://mongodb-service3:27017/linkedin-notification";
+const port= 3003;
 const app= express();
 
 mongoose.connect(url, {

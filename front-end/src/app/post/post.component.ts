@@ -54,7 +54,7 @@ export class PostComponent implements OnInit {
       Authorization: `Bearer ${this.jwtToken}`
     });
     console.log(headers);
-    this.http.post<any>('http://localhost:3000/user/post', formData, {
+    this.http.post<any>('http://localhost:3002/user/post', formData, {
       headers: headers
     }).subscribe(
       (response) => {
