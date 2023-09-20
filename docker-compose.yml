@@ -1,60 +1,66 @@
 version: '3'
 services:
   service1:
-    networks:
-      - my-network
     build:
       context: ./user
-    ports:
-      - '3001:3000'
-
-  service2:
     networks:
       - my-network
+
+  service2:
     depends_on:
       - service1
       - service3
     build:
       context: ./post
-    ports:
-      - '3002:3000'
-
-  service3:
     networks:
       - my-network
+
+  service3:
     depends_on:
       - service1
     build:
       context: ./notification
-    ports:
-      - '3003:3000'
+    networks:
+      - my-network
 
   mongodb-service1:
     image: mongo
     container_name: mongodb-user
-    ports:
-      - '27017:27017'
+    networks:
+      - my-network
 
   mongodb-service2:
     image: mongo
     container_name: mongodb-post
-    ports:
-      - '27018:27017'
+    networks:
+      - my-network
 
   mongodb-service3:
     image: mongo
     container_name: mongodb-notification
-    ports:
-      - '27019:27017'
+    networks:
+      - my-network
 
   minio:
     image: minio/minio
     container_name: minio
     environment:
-      MINIO_ACCESS_KEY: 'vbZYp0B2DMsmyPGclqDO'
-      MINIO_SECRET_KEY: 'IHsSMRuCkig2UKNTRm32TISbKkFYgjajkY4jiW05'
-    ports:
-      - '9000:9000'
+      MINIO_ACCESS_KEY: vbZYp0B2DMsmyPGclqDO
+      MINIO_SECRET_KEY: IHsSMRuCkig2UKNTRm32TISbKkFYgjajkY4jiW05
+    networks:
+      - my-network
     volumes:
-      - ./data:/data  # Map Minio data to a local directory
-    command: server /data
+      - ./post/uploads:/data  
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    volumes:
+      - ./nginx.conf:/nginx.conf
+    ports:
+      - '80:80'
+    networks:
+      - my-network
+
+networks:
+  my-network:
