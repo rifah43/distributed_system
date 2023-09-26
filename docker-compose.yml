@@ -3,8 +3,6 @@ services:
   mongodb-service1:
     image: mongo:4.4
     container_name: mongodb-user
-    volumes:
-      - ./data:data/db
     ports:
       - "27017:27017"
     networks:
@@ -13,20 +11,16 @@ services:
   mongodb-service2:
     image: mongo:4.4
     container_name: mongodb-post
-    volumes:
-      - ./data:data/db
     ports:
-      - "27017:27017"
+      - "27018:27017"
     networks:
       - my-network
 
   mongodb-service3:
     image: mongo:4.4
     container_name: mongodb-notification
-    volumes:
-      - ./data:data/db
     ports:
-      - "27017:27017"
+      - "27019:27017"
     networks:
       - my-network
 
@@ -79,4 +73,4 @@ services:
 
 networks:
   my-network:
-    external: true
+    external: false
