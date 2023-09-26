@@ -1,33 +1,39 @@
 version: '3'
 services:
-  mongodb-service1:
+  mongodb-user:
     image: mongo:4.4
     container_name: mongodb-user
+    volumes:
+      - mongodb_data:/data/db
     ports:
       - "27017:27017"
     networks:
       - my-network
 
-  mongodb-service2:
+  mongodb-post:
     image: mongo:4.4
     container_name: mongodb-post
+    volumes:
+      - mongodb_data:/data/db
     ports:
       - "27018:27017"
     networks:
       - my-network
 
-  mongodb-service3:
+  mongodb-notification:
     image: mongo:4.4
     container_name: mongodb-notification
+    volumes:
+      - mongodb_data:/data/db
     ports:
       - "27019:27017"
     networks:
       - my-network
 
-  service1:
+  user:
     container_name: user
     depends_on:
-      - mongodb-service1
+      - mongodb-user
     build:
       context: ./user
     ports:
@@ -35,11 +41,11 @@ services:
     networks:
       - my-network
 
-  service3:
+  notification:
     container_name: notification
     depends_on:
-      - service1
-      - mongodb-service3
+      - user
+      - mongodb-notification
     build:
       context: ./notification
     ports:
@@ -47,13 +53,13 @@ services:
     networks:
       - my-network
 
-  service2:
+  post:
     container_name: post
     depends_on:
-      - service1
-      - service3
-      - mongodb-service1
-      - mongodb-service3
+      - user
+      - notification
+      - mongodb-user
+      - mongodb-notification
     build:
       context: ./post
     ports:
@@ -61,16 +67,30 @@ services:
     networks:
       - my-network
 
-  nginx:
-    image: nginx
-    container_name: nginx
-    volumes:
-      - ./nginx.conf:/nginx.conf
+  angular:
+    build:
+      context: ./front-end
     ports:
-      - '80:80'
+      - "4200:4200"
+
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:./nginx.conf
+    depends_on:
+      - angular
+      - notification
+      - post
+      - user
     networks:
-      - my-network
+      - my_network
 
 networks:
-  my-network:
-    external: false
+  my_network:
+    driver: bridge
+    
+volumes:
+  mongodb_data:
