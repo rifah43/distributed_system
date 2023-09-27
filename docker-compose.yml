@@ -1,96 +1,89 @@
 version: '3'
 services:
-  mongodb-user:
+  mongodb-service1:
     image: mongo:4.4
     container_name: mongodb-user
-    volumes:
-      - mongodb_data:/data/db
     ports:
       - "27017:27017"
     networks:
       - my-network
 
-  mongodb-post:
+  mongodb-service2:
     image: mongo:4.4
     container_name: mongodb-post
-    volumes:
-      - mongodb_data:/data/db
     ports:
       - "27018:27017"
     networks:
       - my-network
 
-  mongodb-notification:
+  mongodb-service3:
     image: mongo:4.4
     container_name: mongodb-notification
-    volumes:
-      - mongodb_data:/data/db
     ports:
       - "27019:27017"
     networks:
       - my-network
 
-  user:
+  service1:
     container_name: user
     depends_on:
-      - mongodb-user
+      - mongodb-service1
     build:
       context: ./user
+      dockerfile: Dockerfile
     ports:
-      - '3001:3000'
+      - 3001:3001
     networks:
       - my-network
 
-  notification:
+  service3:
     container_name: notification
     depends_on:
-      - user
-      - mongodb-notification
+      - service1
+      - mongodb-service3
     build:
       context: ./notification
+      dockerfile: Dockerfile
     ports:
-      - '3003:3000'
+      - 3003:3003
     networks:
       - my-network
 
-  post:
+  service2:
     container_name: post
     depends_on:
-      - user
-      - notification
-      - mongodb-user
-      - mongodb-notification
+      - service1
+      - service3
+      - mongodb-service1
+      - mongodb-service3
     build:
       context: ./post
+      dockerfile: Dockerfile
     ports:
-      - '3002:3000'
+      - 3002:3002
     networks:
       - my-network
 
-  angular:
+  angular-app:
     build:
       context: ./front-end
+      dockerfile: Dockerfile
+    image: angular
+    container_name: angular
     ports:
-      - "4200:4200"
+      - '4200:80'
+    networks:
+      - my-network
 
   nginx:
-    build:
-      context: ./nginx
-    ports:
-      - "80:80"
+    image: nginx
+    container_name: nginx
     volumes:
-      - ./nginx.conf:./nginx.conf
-    depends_on:
-      - angular
-      - notification
-      - post
-      - user
+      - ./nginx/nginx.conf:/nginx/nginx.conf
+    ports:
+      - '80:80'
     networks:
-      - my_network
-
+      - my-network
 networks:
-  my_network:
-    driver: bridge
-    
-volumes:
-  mongodb_data:
+  my-network:
+    external: false
