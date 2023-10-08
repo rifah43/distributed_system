@@ -24,7 +24,7 @@ mongoose.connect(url, {
     console.log("Error connecting to MongoDB:", error);
   });
 app.use(cors({
-  origin: 'http://localhost:4200',
+  origin: 'http://frontend:80',
   credentials: true
 }));
 app.use(express.json());

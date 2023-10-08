@@ -28,7 +28,7 @@ export class IndividualPostComponent implements OnInit {
 
   fetchPostDetails() {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
-    this.http.get<any>(`http://localhost:3002/user/post/${this.postId}`, { headers: headers }).subscribe(
+    this.http.get<any>(`http://post:3000/post/${this.postId}`, { headers: headers }).subscribe(
       (post) => {
         this.post = post;
       },

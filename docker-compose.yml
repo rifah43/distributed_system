@@ -1,89 +1,77 @@
 version: '3'
 services:
   mongodb-service1:
-    image: mongo:4.4
-    container_name: mongodb-user
+    image: mongo:4
     ports:
       - "27017:27017"
-    networks:
-      - my-network
+    volumes:
+      - mongo-data1:/data/db
 
   mongodb-service2:
-    image: mongo:4.4
-    container_name: mongodb-post
+    image: mongo:4
     ports:
-      - "27018:27017"
-    networks:
-      - my-network
+      - "27018:27017" 
+    volumes:
+      - mongo-data2:/data/db
 
   mongodb-service3:
-    image: mongo:4.4
-    container_name: mongodb-notification
+    image: mongo:4
     ports:
-      - "27019:27017"
-    networks:
-      - my-network
+      - "27019:27017" 
+    volumes:
+      - mongo-data3:/data/db
 
-  service1:
-    container_name: user
-    depends_on:
-      - mongodb-service1
+  user:
     build:
       context: ./user
-      dockerfile: Dockerfile
     ports:
-      - 3001:3001
-    networks:
-      - my-network
-
-  service3:
-    container_name: notification
+      - "3001:3000"
     depends_on:
-      - service1
-      - mongodb-service3
-    build:
-      context: ./notification
-      dockerfile: Dockerfile
-    ports:
-      - 3003:3003
-    networks:
-      - my-network
-
-  service2:
-    container_name: post
-    depends_on:
-      - service1
-      - service3
       - mongodb-service1
-      - mongodb-service3
+
+  post:
     build:
       context: ./post
-      dockerfile: Dockerfile
     ports:
-      - 3002:3002
-    networks:
-      - my-network
+      - "3002:3000"
+    depends_on:
+      - mongodb-service2
 
-  angular-app:
+  notification:
+    build:
+      context: ./notification
+    ports:
+      - "3003:3000"
+    depends_on:
+      - mongodb-service3
+
+  frontend:
     build:
       context: ./front-end
-      dockerfile: Dockerfile
-    image: angular
-    container_name: angular
     ports:
-      - '4200:80'
-    networks:
-      - my-network
+      - "80:80"
+    environment:
+      - BACKEND_URL=http://user:3000
+      - ANOTHER_BACKEND_URL=http://post:3000
+      - YET_ANOTHER_BACKEND_URL=http://notification:3000
+    depends_on:
+      - user
+      - post
+      - notification
 
   nginx:
-    image: nginx
-    container_name: nginx
-    volumes:
-      - ./nginx/nginx.conf:/nginx/nginx.conf
+    image: nginx:latest
     ports:
-      - '80:80'
-    networks:
-      - my-network
-networks:
-  my-network:
-    external: false
+      - "3000:80"
+    volumes:
+      - /home/rifahtashfihafaria/Desktop/distributed_system/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - user
+      - post
+      - notification
+      - frontend
+
+volumes:
+  mongo-data1:
+  mongo-data2:
+  mongo-data3:
