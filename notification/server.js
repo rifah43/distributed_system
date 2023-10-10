@@ -25,10 +25,7 @@ mongoose.connect(url, {
   .catch((error) => {
     console.log("Error connecting to MongoDB:", error);
   });
-app.use(cors({
-  origin: 'http://frontend:80',
-  credentials: true
-}));
+  app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json({limit: "4mb"}));
 
