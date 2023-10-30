@@ -4,7 +4,7 @@ const cors= require("cors");
 const bodyParser = require("body-parser");
 const cleanNotificationJob= require('./cleanNotificationJob.js');
 
-const url= "mongodb://mongodb-service3:27017/linkedin-notification";
+const url= "mongodb://mongodb-service1/userdb";
 const port= 3003;
 const app= express();
 
@@ -25,7 +25,8 @@ mongoose.connect(url, {
   .catch((error) => {
     console.log("Error connecting to MongoDB:", error);
   });
-  app.use(cors());
+  // app.use(cors());
+  app.options('*', cors())
 app.use(express.json());
 app.use(bodyParser.json({limit: "4mb"}));
 

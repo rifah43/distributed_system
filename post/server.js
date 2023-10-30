@@ -3,7 +3,7 @@ const express= require("express");
 const cors= require("cors");
 const bodyParser = require("body-parser");
 
-const url= "mongodb://mongodb-service2:27017/linkedin-post";
+const url= "mongodb://mongodb-service2/postdb";
 const port= 3002;
 const app= express();
 

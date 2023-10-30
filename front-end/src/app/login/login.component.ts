@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit{
 
     const user = this.form.getRawValue();
 
-    this.http.post("http://user:3000/user/login", user, {
+    this.http.post("http://user:3001/user/login", user, {
       withCredentials: true
     })
     .subscribe(
