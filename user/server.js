@@ -28,4 +28,4 @@ app.use(express.json());
 app.use(bodyParser.json({limit: "4mb"}));
 
 const userRoutes = require('./userRoutes.js');
-app.use(userRoutes);
+app.use('/user',userRoutes);

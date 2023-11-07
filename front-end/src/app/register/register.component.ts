@@ -1,22 +1,20 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import swal from 'sweetalert2';
+import axios from 'axios'; 
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css','../../styles.css']
+  styleUrls: ['./register.component.css', '../../styles.css']
 })
-export class RegisterComponent implements OnInit{
-  form:FormGroup
+export class RegisterComponent implements OnInit {
+  form: FormGroup;
   authenticated = false;
   token: string | null = null;
 
-  constructor(private formbuilder:FormBuilder, private http:HttpClient, private router:Router){
-
-  }
+  constructor(private formbuilder: FormBuilder, private router: Router) {}
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
@@ -46,18 +44,18 @@ export class RegisterComponent implements OnInit{
       return;
     }
 
-    this.http.post("http://user:3001/user/register", user, {
-      withCredentials: true
-    })
-    .subscribe(
-      (response: any) => {
-        const successMessage = response.message; 
-        swal.fire('Success!', successMessage, 'success'); 
-        this.router.navigate(['/login']); 
-      },
-      (err: any) => {
-        console.error("Registration error:", err);
-        swal.fire('Error!', err.error?.message, 'error');
+    axios
+      .post('http://localhost/user/register', user, {
+        withCredentials: true,
+      })
+      .then((response) => {
+        const successMessage = response.data.message;
+        swal.fire('Success!', successMessage, 'success');
+        this.router.navigate(['/login']);
+      })
+      .catch((error) => {
+        console.error('Registration error:', error);
+        swal.fire('Error!', error.response.data?.message, 'error');
       });
   }
 }

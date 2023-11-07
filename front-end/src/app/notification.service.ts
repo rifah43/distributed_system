@@ -1,19 +1,50 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import axios from 'axios';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationService {
+  private baseURL = 'http://localhost/notification';
 
-  constructor(private http: HttpClient) {}
+  constructor() {}
 
-  getNotifications(headers: HttpHeaders): Observable<any[]> {
-    return this.http.get<any[]>('http://notification:3003/notification', { headers });
+  getNotifications(headers: any): Observable<any[]> {
+    const config = {
+      headers: headers,
+    };
+
+    return new Observable<any[]>((observer) => {
+      axios
+        .get(this.baseURL, config)
+        .then((response) => {
+          observer.next(response.data);
+          observer.complete();
+        })
+        .catch((error) => {
+          observer.error(error);
+          observer.complete();
+        });
+    });
   }
 
-  deleteNotification(notificationId: string, headers: HttpHeaders): Observable<any> {
-    return this.http.delete<any>(`http://notification:3003/notification/${notificationId}`, { headers });
+  deleteNotification(notificationId: string, headers: any): Observable<any> {
+    const config = {
+      headers: headers,
+    };
+
+    return new Observable<any>((observer) => {
+      axios
+        .delete(`${this.baseURL}/${notificationId}`, config)
+        .then((response) => {
+          observer.next(response.data);
+          observer.complete();
+        })
+        .catch((error) => {
+          observer.error(error);
+          observer.complete();
+        });
+    });
   }
 }

@@ -1,6 +1,6 @@
-import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import axios from 'axios';
 
 @Component({
   selector: 'app-individual-post',
@@ -9,10 +9,10 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class IndividualPostComponent implements OnInit {
   postId: string | null = null;
-  post: any; 
+  post: any;
   token: string | null = null;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) { }
+  constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
@@ -27,14 +27,19 @@ export class IndividualPostComponent implements OnInit {
   }
 
   fetchPostDetails() {
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
-    this.http.get<any>(`http://post:3002/post/${this.postId}`, { headers: headers }).subscribe(
-      (post) => {
-        this.post = post;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
       },
-      (error) => {
+    };
+
+    axios
+      .get(`http://localhost/post/${this.postId}`, config)
+      .then((response) => {
+        this.post = response.data;
+      })
+      .catch((error) => {
         console.error('Error fetching post details:', error);
-      }
-    );
+      });
   }
 }

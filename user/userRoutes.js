@@ -4,12 +4,11 @@ const User= require('./userModel.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-router.post('/user/register', async (req, res) => {
+router.post('/register', async (req, res) => {
     try {
         const salt = await bcrypt.genSalt(10);
         const hashed = await bcrypt.hash(req.body.password, salt);
-        const us= User.User;
-        const user = new us({
+        const user= new User({
             firstname: req.body.firstname,
             lastname: req.body.lastname,
             email: req.body.email,
@@ -26,10 +25,9 @@ router.post('/user/register', async (req, res) => {
     }
 });
 
-router.post('/user/login', async (req, res) => {
+router.post('/login', async (req, res) => {
     try {
-        const us= User.User;
-        const user = await us.findOne({ email: req.body.email });
+        const user = await User.findOne({ email: req.body.email });
 
         if (!user) {
             return res.status(404).json({

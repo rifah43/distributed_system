@@ -28,4 +28,4 @@ app.use(express.json());
 app.use(bodyParser.json({limit: "4mb"}));
 
 const postRoutes = require('./postRoutes.js');
-app.use(postRoutes);
+app.use('/',postRoutes);

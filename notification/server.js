@@ -4,7 +4,7 @@ const cors= require("cors");
 const bodyParser = require("body-parser");
 const cleanNotificationJob= require('./cleanNotificationJob.js');
 
-const url= "mongodb://mongodb-service1/userdb";
+const url= "mongodb://mongodb-service3/notificationdb";
 const port= 3003;
 const app= express();
 
@@ -31,4 +31,4 @@ app.use(express.json());
 app.use(bodyParser.json({limit: "4mb"}));
 
 const notifRoutes = require('./notificationRoute.js');
-app.use(notifRoutes);
+app.use('/',notifRoutes);

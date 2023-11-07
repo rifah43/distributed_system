@@ -1,6 +1,6 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import axios from 'axios';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,7 +13,7 @@ export class DashboardComponent implements OnInit {
   authenticated = false;
   posts: any[] = [];
 
-  constructor(private http: HttpClient, private router:Router) {}
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
@@ -24,23 +24,26 @@ export class DashboardComponent implements OnInit {
       const ln = localStorage.getItem('lastname');
       this.message = `${fn} ${ln}'s newsfeed`;
       this.fetchPosts();
-    }
-    else{
-      this.router.navigate(['/login']); 
+    } else {
+      this.router.navigate(['/login']);
     }
   }
 
   fetchPosts(): void {
-    const headers= new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
-    this.http.get<any>('http://post:3002/post', { headers: headers }).subscribe(
-      (posts) => {
-        this.posts = posts;
-        console.log(this.posts)
+    const config = {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
       },
-      (error) => {
+    };
+
+    axios
+      .get('http://localhost/post', config)
+      .then((response) => {
+        this.posts = response.data;
+        console.log(this.posts);
+      })
+      .catch((error) => {
         console.error('Error fetching posts:', error);
-      }
-    );
-    
+      });
   }
 }
