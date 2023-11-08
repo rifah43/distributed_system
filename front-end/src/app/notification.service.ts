@@ -14,10 +14,11 @@ export class NotificationService {
     const config = {
       headers: headers,
     };
-
+    console.log(config);
+    
     return new Observable<any[]>((observer) => {
       axios
-        .get(this.baseURL, config)
+        .get(this.baseURL,config)
         .then((response) => {
           observer.next(response.data);
           observer.complete();

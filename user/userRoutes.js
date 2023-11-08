@@ -56,4 +56,35 @@ router.post('/login', async (req, res) => {
     }
 });
 
+router.get('/create-post', async (req, res) => {
+    try {
+      const otherUsers = await User.find({ _id: { $nin: req._id } });
+      res.status(200).json(otherUsers);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while fetching other users' });
+    }
+  });
+
+  router.get('/get-user', async (req, res) => {
+    try {
+      console.log(req.body);
+        const user = await User.findOne({ email: req.body.email });
+
+        if (!user) {
+          throw new Error('User not found.');
+        }
+        const userId = user._id;
+        console.log(userId, 'hi');
+      res.status(200).json({ userId });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while fetching other users' });
+    }
+  });
+
+  router.get('/g', async (req, res) => {
+    res.status(200).json({message:"ok"})
+  });
+
 module.exports = router;

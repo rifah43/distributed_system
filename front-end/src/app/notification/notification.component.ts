@@ -15,6 +15,8 @@ export class NotificationComponent implements OnInit {
 
   ngOnInit(): void {
     this.jwtToken = localStorage.getItem('token')
+    console.log(this.jwtToken,"hihi");
+    
     if(this.jwtToken){
       this.fetchNotifications();
     }
@@ -24,6 +26,8 @@ export class NotificationComponent implements OnInit {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.jwtToken}`
     });
+    console.log(headers);
+    
 
     this.notificationService.getNotifications(headers).subscribe(
       (notifications: any) => {

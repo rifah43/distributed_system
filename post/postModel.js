@@ -2,9 +2,7 @@ const mongoose = require('mongoose');
 const minIOIntegration = require('./minIOSetup/minIOConnection.js');
 const minioClient = minIOIntegration.minioClient;
 const fs = require('fs');
-const linkedInUserConnection = mongoose.createConnection('mongodb://mongodb-service1:27017/linkedin-user');
-const linkedInNotificationConnection = mongoose.createConnection('mongodb://mongodb-service3:27017/linkedin-notification');
-
+const axios = require('axios');
 const postSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -34,15 +32,15 @@ module.exports.getPost= async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(401).send({
-      message: 'User unauthenticated',
+      message: 'No posts',
     });
   }
 };
 
-module.exports.makePost= async (req, res) =>{
-  console.log(linkedInUserConnection);
+module.exports.makePost = async (req, res) => {
   const bucketName = 'linkedin';
   const file = req.file;
+  
   try {
     let imageUrl = null;
 
@@ -50,39 +48,41 @@ module.exports.makePost= async (req, res) =>{
       const fileData = fs.readFileSync(file.path);
       const objectName = Date.now() + '-' + file.originalname;
       const metadata = { 'Content-type': 'image' };
-      const v= await minioClient.putObject(bucketName, objectName, fileData, metadata);
+      const minioResponse = await minioClient.putObject(bucketName, objectName, fileData, metadata);
 
       imageUrl = `http://minio:9000/${bucketName}/${objectName}`;
     }
 
-    const newPost = new Post({
+    const newPostData = new Post({
       name: req.firstname,
       content: req.body.content,
       imageUrl: imageUrl,
     });
-    const result = await newPost.save();
-    const us= linkedInUserConnection.model('User');
-    const otherUsers = await us.find({ _id: { $nin: req._id } });
-    const message = `${req.firstname} has created a new post.`;
+    const result = await newPostData.save();
+    const userApiUrl = "http://user:3001/user";
+    const notifApiUrl = "http://notification:3003/notification";
 
+    const otherUsers = await axios.get(`${userApiUrl}/create-post`, );
+    console.log(otherUsers);
+    
+    const message = `${req.firstname} has created a new post.`;
     const notifications = otherUsers.map((otherUser) => ({
       userId: otherUser._id,
-      postId: result._id,
-      message,
+      postId: result._id, 
+      message: message
     }));
-    const no= linkedInNotificationConnection.model('Notification');
 
-    await no.insertMany(notifications);
+    await axios.post(`${notifApiUrl}/get-notifications`, notifications);
 
     res.status(201).send({
       message: 'Post Created Successfully!',
     });
   } catch (err) {
-    console.log(err);
-    return res.status(401).send({
-      message: 'User unauthenticated',
-    });
-  }
+     console.error(err);
+     return res.status(401).send({
+       message: 'User unauthenticated',
+     });
+   }
 };
 
 module.exports.getIndividualPost= async (req, res) => {

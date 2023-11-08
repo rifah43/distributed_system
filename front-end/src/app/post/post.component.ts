@@ -56,7 +56,7 @@ export class PostComponent implements OnInit {
     };
 
     axios
-      .post('http://localhost/post', formData, config)
+      .post('http://localhost/post', formData,config)
       .then((response) => {
         this.form.reset();
         swal.fire({

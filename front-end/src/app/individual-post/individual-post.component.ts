@@ -34,7 +34,7 @@ export class IndividualPostComponent implements OnInit {
     };
 
     axios
-      .get(`http://localhost/post/${this.postId}`, config)
+      .get(`http://localhost/post/${this.postId}`,config)
       .then((response) => {
         this.post = response.data;
       })

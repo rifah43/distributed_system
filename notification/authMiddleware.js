@@ -2,8 +2,10 @@ const jwt = require('jsonwebtoken');
 
 module.exports.authenticate= async(req, res, next)=>{
     const {authorization} = req.headers;
+    console.log(authorization, "eta");
     try{
         const token = authorization.split(' ')[1];
+        console.log(token);
         const decoded = jwt.verify(token, "secret");
         const {_id, email, firstname, lastname} = decoded;
         req._id= _id;

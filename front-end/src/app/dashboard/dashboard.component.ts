@@ -17,6 +17,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
+    
 
     if (this.token) {
       this.authenticated = true;
@@ -37,7 +38,7 @@ export class DashboardComponent implements OnInit {
     };
 
     axios
-      .get('http://localhost/post', config)
+      .get('http://localhost/post',config)
       .then((response) => {
         this.posts = response.data;
         console.log(this.posts);

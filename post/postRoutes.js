@@ -1,6 +1,6 @@
 const {Router}= require('express');
 const router= Router();
-const authMiddleware= require('./authMiddleware.js');
+const authenticateJWT = require('./authMiddleware.js')
 const Post= require('./postModel.js');
 const multer = require('multer');
 
@@ -15,15 +15,15 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-router.get("/post",authMiddleware.authenticate, async (req, res) => {
+router.get("/post",authenticateJWT.authenticate, async (req, res) => {
   Post.getPost(req,res);
 });
 
-router.post('/post', authMiddleware.authenticate, upload.single('image'), async (req, res) =>{
+router.post('/post', authenticateJWT.authenticate, upload.single('image'), async (req, res) =>{
   Post.makePost(req,res);
 });
 
-router.get('/post/:id',authMiddleware.authenticate, async (req, res) => {
+router.get('/post/:id',authenticateJWT.authenticate, async (req, res) => {
   Post.getIndividualPost(req,res);
 });
 module.exports= router;

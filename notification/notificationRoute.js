@@ -1,24 +1,16 @@
 const { Router } = require('express');
 const mongoose = require('mongoose');
 const router = Router();
-const authMiddleware = require('./authMiddleware.js');
+const authenticateJWT = require('./authMiddleware.js')
 const Notification = require('./notificationModel.js');
+const axios = require('axios');
 
-const linkedInUserConnection = mongoose.createConnection('mongodb://mongodb-service1:27017/linkedin-user');
-
-router.get('/notification', authMiddleware.authenticate, async (req, res) => {
+router.get('/notification', async (req, res) => {
   try {
-    const User = linkedInUserConnection.model('User');
-    const user = await User.findOne({ email: req.email });
-
-    if (!user) {
-      throw new Error('User not found.');
-    }
-
-    const userId = user._id;
-    const NotificationModel = Notification.Notification;
-    const notifications = await NotificationModel.find({ userId }).sort({ createdAt: -1 }).exec();
-
+    console.log(req.body);
+    const userId = await axios.get('http://user:3001/user/get-user');
+    const notifications = await Notification.find({ userId }).sort({ createdAt: -1 }).exec();
+    console.log(userId, "hihihi");
     res.status(200).json(notifications);
   } catch (error) {
     console.error('Error retrieving notifications:', error);
@@ -26,10 +18,9 @@ router.get('/notification', authMiddleware.authenticate, async (req, res) => {
   }
 });
 
-router.delete('/notification/:id', authMiddleware.authenticate, async (req, res) => {
+router.delete('/notification/:id', async (req, res) => {
   try {
-    const NotificationModel = Notification.Notification;
-    const deletedNotification = await NotificationModel.findByIdAndDelete(req.params.id);
+    const deletedNotification = await Notification.findByIdAndDelete(req.params.id);
 
     if (!deletedNotification) {
       return res.status(404).send({
@@ -44,6 +35,17 @@ router.delete('/notification/:id', authMiddleware.authenticate, async (req, res)
   } catch (err) {
     console.log(err);
     res.status(500).send('Internal Server Error');
+  }
+});
+router.post('/notification/get-notifications', async (req, res) => {
+  try {
+    const notifications = req.body;
+    console.log(notifications);
+    await Notification.insertMany(notifications);
+    res.status(200).json({ message: "Stored" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while getting notifications' });
   }
 });
 
