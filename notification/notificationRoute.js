@@ -5,7 +5,7 @@ const authenticateJWT = require('./authMiddleware.js')
 const Notification = require('./notificationModel.js');
 const axios = require('axios');
 
-router.get('/notification', async (req, res) => {
+router.get('/notification',authenticateJWT.authenticate, async (req, res) => {
   try {
     console.log(req.body);
     const userId = await axios.get('http://user:3001/user/get-user');
