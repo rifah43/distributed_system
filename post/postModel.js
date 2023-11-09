@@ -48,7 +48,7 @@ module.exports.makePost = async (req, res) => {
 
       const fileData = fs.readFileSync(file.path);
       const objectName = Date.now() + '-' + file.originalname;
-      const metadata = { 'Content-type': 'image' };
+      const metadata = { 'Content-type': 'image/jpeg' };
 
       try {
           await minioClient.putObject(bucketName, objectName, fileData, metadata);
@@ -57,7 +57,7 @@ module.exports.makePost = async (req, res) => {
           throw new Error('Error uploading to Minio');
       }
 
-      const imageUrl = `http://localhost:9000/${bucketName}/${objectName}`;
+      const imageUrl = `http://localhost:9001/${bucketName}/${objectName}`;
 
       const newPostData = new Post({
           name: req.firstname,
