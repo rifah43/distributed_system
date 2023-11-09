@@ -57,7 +57,7 @@ module.exports.makePost = async (req, res) => {
           throw new Error('Error uploading to Minio');
       }
 
-      const imageUrl = `http://localhost:9001/${bucketName}/${objectName}`;
+      const imageUrl = `http://localhost:9000/${bucketName}/${objectName}`;
 
       const newPostData = new Post({
           name: req.firstname,

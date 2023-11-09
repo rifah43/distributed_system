@@ -13,9 +13,11 @@
 }
 
 .post-container {
-  width: 80%;
-  max-width: 600px;
+  max-height: 60vh; 
+  overflow-y: auto; 
+  padding: 10px; 
 }
+
 
 .post-card {
   font-size: 18px;
