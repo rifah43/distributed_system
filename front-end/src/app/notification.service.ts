@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios'; // Update import
 import { Observable } from 'rxjs';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -10,15 +11,14 @@ export class NotificationService {
 
   constructor() {}
 
-  getNotifications(headers: any): Observable<any[]> {
-    const config = {
-      headers: headers,
+  getNotifications(headers: HttpHeaders): Observable<any[]> {
+    const config: AxiosRequestConfig = {
+      headers: this.convertHeaders(headers),
     };
-    console.log(config);
-    
+
     return new Observable<any[]>((observer) => {
       axios
-        .get(this.baseURL,config)
+        .get(this.baseURL, config)
         .then((response) => {
           observer.next(response.data);
           observer.complete();
@@ -30,9 +30,9 @@ export class NotificationService {
     });
   }
 
-  deleteNotification(notificationId: string, headers: any): Observable<any> {
-    const config = {
-      headers: headers,
+  deleteNotification(notificationId: string, headers: HttpHeaders): Observable<any> {
+    const config: AxiosRequestConfig = {
+      headers: this.convertHeaders(headers),
     };
 
     return new Observable<any>((observer) => {
@@ -47,5 +47,13 @@ export class NotificationService {
           observer.complete();
         });
     });
+  }
+
+  private convertHeaders(headers: HttpHeaders): Record<string, string> {
+    const convertedHeaders: Record<string, string> = {};
+    headers.keys().forEach((key) => {
+      convertedHeaders[key] = headers.get(key) || '';
+    });
+    return convertedHeaders;
   }
 }

@@ -40,49 +40,62 @@ module.exports.getPost= async (req, res) => {
 module.exports.makePost = async (req, res) => {
   const bucketName = 'linkedin';
   const file = req.file;
-  
-  try {
-    let imageUrl = null;
 
-    if (file) {
+  try {
+      if (!file) {
+          throw new Error('No file provided');
+      }
+
       const fileData = fs.readFileSync(file.path);
       const objectName = Date.now() + '-' + file.originalname;
       const metadata = { 'Content-type': 'image' };
-      const minioResponse = await minioClient.putObject(bucketName, objectName, fileData, metadata);
 
-      imageUrl = `http://minio:9000/${bucketName}/${objectName}`;
-    }
+      try {
+          await minioClient.putObject(bucketName, objectName, fileData, metadata);
+      } catch (minioError) {
+          console.error('Error uploading to Minio:', minioError);
+          throw new Error('Error uploading to Minio');
+      }
 
-    const newPostData = new Post({
-      name: req.firstname,
-      content: req.body.content,
-      imageUrl: imageUrl,
-    });
-    const result = await newPostData.save();
-    const userApiUrl = "http://user:3001/user";
-    const notifApiUrl = "http://notification:3003/notification";
+      const imageUrl = `http://localhost:9000/${bucketName}/${objectName}`;
 
-    const otherUsers = await axios.get(`${userApiUrl}/create-post`, );
-    console.log(otherUsers);
-    
-    const message = `${req.firstname} has created a new post.`;
-    const notifications = otherUsers.map((otherUser) => ({
-      userId: otherUser._id,
-      postId: result._id, 
-      message: message
-    }));
+      const newPostData = new Post({
+          name: req.firstname,
+          content: req.body.content,
+          imageUrl: imageUrl,
+      });
+      const result = await newPostData.save();
 
-    await axios.post(`${notifApiUrl}/get-notifications`, notifications);
+      const userApiUrl = "http://user:3001/user";
+      const notifApiUrl = "http://notification:3003/notification";
 
-    res.status(201).send({
-      message: 'Post Created Successfully!',
-    });
+      const otherUsersResponse = await axios.get(`${userApiUrl}/create-post`);
+      const otherUsers = otherUsersResponse.data;
+
+      console.log(otherUsers);
+
+      if (!Array.isArray(otherUsers)) {
+          throw new Error('Other users data is not an array.');
+      }
+
+      const message = `${req.firstname} has created a new post.`;
+      const notifications = otherUsers.map((otherUser) => ({
+          userId: otherUser._id,
+          postId: result._id,
+          message: message
+      }));
+
+      console.log(await axios.post(`${notifApiUrl}/get-notifications`, notifications));
+
+      res.status(201).send({
+          message: 'Post Created Successfully!',
+      });
   } catch (err) {
-     console.error(err);
-     return res.status(401).send({
-       message: 'User unauthenticated',
-     });
-   }
+      console.error(err);
+      return res.status(500).send({
+          message: 'Internal Server Error',
+      });
+  }
 };
 
 module.exports.getIndividualPost= async (req, res) => {

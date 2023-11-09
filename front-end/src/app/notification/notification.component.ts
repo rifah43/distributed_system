@@ -11,28 +11,25 @@ import { NotificationService } from '../notification.service';
 export class NotificationComponent implements OnInit {
   notifications: any[] = [];
   jwtToken: string | null = null;
+
   constructor(private router: Router, private notificationService: NotificationService) {}
 
   ngOnInit(): void {
-    this.jwtToken = localStorage.getItem('token')
-    console.log(this.jwtToken,"hihi");
+    this.jwtToken = localStorage.getItem('token');
     
-    if(this.jwtToken){
+    if (this.jwtToken) {
       this.fetchNotifications();
     }
   }
 
   fetchNotifications() {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.jwtToken}`
-    });
-    console.log(headers);
-    
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.jwtToken}`);
 
     this.notificationService.getNotifications(headers).subscribe(
       (notifications: any) => {
         this.notifications = notifications;
-        console.log(this.notifications);
+        console.log(notifications);
+        
       },
       (error: any) => {
         console.error('Error fetching notifications:', error);
@@ -41,9 +38,7 @@ export class NotificationComponent implements OnInit {
   }
 
   deleteNotification(notificationId: string) {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.jwtToken}`
-    });
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.jwtToken}`);
 
     this.notificationService.deleteNotification(notificationId, headers).subscribe(
       () => { 

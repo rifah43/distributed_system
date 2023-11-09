@@ -7,15 +7,27 @@ const axios = require('axios');
 
 router.get('/notification',authenticateJWT.authenticate, async (req, res) => {
   try {
-    console.log(req.body);
-    const userId = await axios.get('http://user:3001/user/get-user');
+    const userEmail = req.email;
+    console.log(userEmail);
+
+    const response = await axios.get('http://user:3001/user/get-user', {
+        params: { email: userEmail }
+    });
+
+    const userData = response.data;
+    const userId = userData.userId; 
+    console.log(userId);
+
     const notifications = await Notification.find({ userId }).sort({ createdAt: -1 }).exec();
-    console.log(userId, "hihihi");
+
+    console.log(notifications);
     res.status(200).json(notifications);
-  } catch (error) {
+} catch (error) {
     console.error('Error retrieving notifications:', error);
     res.status(500).json({ message: 'Error retrieving notifications' });
-  }
+}
+
+
 });
 
 router.delete('/notification/:id', async (req, res) => {

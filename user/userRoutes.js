@@ -68,20 +68,24 @@ router.get('/create-post', async (req, res) => {
 
   router.get('/get-user', async (req, res) => {
     try {
-      console.log(req.body);
-        const user = await User.findOne({ email: req.body.email });
+        const userEmail = req.query.email; 
+        console.log(userEmail);
+
+        const user = await User.findOne({ email: userEmail });
 
         if (!user) {
-          throw new Error('User not found.');
+            throw new Error('User not found.');
         }
+        
         const userId = user._id;
-        console.log(userId, 'hi');
-      res.status(200).json({ userId });
+        
+        res.status(200).json({ userId });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'An error occurred while fetching other users' });
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred while fetching other users' });
     }
-  });
+});
+
 
   router.get('/g', async (req, res) => {
     res.status(200).json({message:"ok"})
